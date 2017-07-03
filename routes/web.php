@@ -13,6 +13,8 @@
 
 
 
+Route::get('/', 'HomeController@guest')->name('guest');
+
 
 
 Route::group(['prefix' => 'admin'], function () {
@@ -37,7 +39,7 @@ Route::group(['prefix' => 'admin'], function () {
 });
 Auth::routes();
 
-Route::get('/', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/{lang}/test/{id}', 'HomeController@test')->name('test');
 Route::get('/{lang}/start', 'HomeController@start')->name('start');
 Route::get('/{lang}/finish', 'HomeController@finish')->name('finish');
