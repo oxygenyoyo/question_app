@@ -24,7 +24,6 @@ class CreateQuestionTable extends Migration
             $table->string('choice2_th');
             $table->string('choice3_th');
             $table->string('choice4_th');
-            $table->integer('answer_th');
             $table->longText('description_th');
 
             $table->string('question_en');
@@ -32,7 +31,6 @@ class CreateQuestionTable extends Migration
             $table->string('choice2_en');
             $table->string('choice3_en');
             $table->string('choice4_en');
-            $table->integer('answer_en');
             $table->longText('description_en');
 
             $table->string('question_vn');
@@ -40,9 +38,9 @@ class CreateQuestionTable extends Migration
             $table->string('choice2_vn');
             $table->string('choice3_vn');
             $table->string('choice4_vn');
-            $table->integer('answer_vn');
             $table->longText('description_vn');
             $table->integer('order');
+            $table->integer('answer');
 
         
             $table->timestamps();

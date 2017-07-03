@@ -11,9 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 
 
@@ -40,4 +37,9 @@ Route::group(['prefix' => 'admin'], function () {
 });
 Auth::routes();
 
-Route::get('/home', 'HomeController@index');
+Route::get('/', 'HomeController@index')->name('home');
+Route::get('/{lang}/test/{id}', 'HomeController@test')->name('test');
+Route::get('/{lang}/start', 'HomeController@start')->name('start');
+Route::get('/{lang}/finish', 'HomeController@finish')->name('finish');
+Route::post('/{lang}/test/{id}', 'HomeController@answer')->name('answer');
+
