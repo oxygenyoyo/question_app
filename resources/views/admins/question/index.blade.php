@@ -23,7 +23,7 @@
               <h3 class="box-title">Question List</h3>
             </div>
             <div class="col-md-3">
-              <a href="{{ url('admin/question/create') }}" class="btn btn-primary"> Add new question</a>
+              <a href="{{ route('q.create') }}" class="btn btn-primary"> Add new question</a>
             </div>
             <div class="col-md-7">
               <form action="" method="get">
@@ -45,18 +45,21 @@
               <table class="table table-hover">
                 <tbody>
                   <tr>
-                    <th>Question</th>
+                    <th>id</th>
+                    <th>title th</th>
+                    <th>title en</th>
                     <th>Action</th>
                   </tr>
 
                   @foreach ($questions as $question)
 
                   <tr>
-                    <td>{{$question->question_th}}</td>
-                    
+                    <td>{{$question->id}}</td>
+                    <td>{{$question->title_th}}</td>
+                    <td>{{$question->title_en}}</td>
                     <td>
-                      <a href="{{action('QuestionController@edit', ['id' => $question->id])}}" class="btn btn-default">Edit</a>
-                      <button data-del-url="{{ url('admin/question/' . $question->id) }}" class="btn btn-danger del-btn" data-toggle="modal" data-target="#delConfirmModal">
+                      <a href="{{route('q.edit', $question->id)}}" class="btn btn-default">Edit</a>
+                      <button data-del-url="{{ route('q.destroy',$question->id)}}" class="btn btn-danger del-btn" data-toggle="modal" data-target="#delConfirmModal">
                         Delete
                       </button>
                     </td>
@@ -148,6 +151,7 @@ $('#del-btn').on('click', function(e) {
       if(res.success == 'true') {
         $('.del-clicked').closest('tr').remove()
         $('#delConfirmModal').modal('toggle');
+        alert('ลบชุดคำถามสำเร็จแล้ว');
       }
     }
   });

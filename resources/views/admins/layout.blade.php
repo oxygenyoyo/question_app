@@ -76,8 +76,21 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="{{ url('admin') }}"><i class="fa fa-circle-o"></i>Question Lists</a></li>
-            <li><a href="{{ url('admin/question/create') }}"><i class="fa fa-circle-o"></i> Create new question</a></li>
+            <li><a href="{{ route('q.index') }}"><i class="fa fa-circle-o"></i>Question Lists</a></li>
+            <li><a href="{{ route('q.create') }}"><i class="fa fa-circle-o"></i> Create new question</a></li>
+          </ul>
+        </li>
+
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-check"></i> <span> Answer</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="{{ route('a.index') }}"><i class="fa fa-circle-o"></i>Answer Lists</a></li>
+            <li><a href="{{ route('a.create') }}"><i class="fa fa-circle-o"></i> Create new answer</a></li>
           </ul>
         </li>
         <li class="header">System</li>
@@ -119,6 +132,8 @@
 <script src="{{URL::asset('plugins/daterangepicker/daterangepicker.js')}}"></script>
 <!-- datepicker -->
 <script src="{{URL::asset('plugins/datepicker/bootstrap-datepicker.js')}}"></script>
+<!-- datepicker -->
+<script src="{{URL::asset('plugins/colorpicker/bootstrap-colorpicker.min.js')}}"></script>
 <!-- Bootstrap WYSIHTML5 -->
 <script src="{{URL::asset('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}"></script>
 <!-- Slimscroll -->

@@ -4,10 +4,13 @@ namespace Illuminate\Redis\Connections;
 
 use Closure;
 
+/**
+ * @mixin \Redis
+ */
 class PhpRedisConnection extends Connection
 {
     /**
-     * Create a new Predis connection.
+     * Create a new PhpRedis connection.
      *
      * @param  \Redis  $client
      * @return void
@@ -63,7 +66,7 @@ class PhpRedisConnection extends Connection
     }
 
     /**
-     * Removes the first count occurences of the value element from the list.
+     * Removes the first count occurrences of the value element from the list.
      *
      * @param  string  $key
      * @param  int  $count
@@ -108,6 +111,36 @@ class PhpRedisConnection extends Connection
         }
 
         return $this->client->zadd($key, ...$dictionary);
+    }
+
+    /**
+     * Execute commands in a pipeline.
+     *
+     * @param  callable  $callback
+     * @return array|\Redis
+     */
+    public function pipeline(callable $callback = null)
+    {
+        $pipeline = $this->client()->pipeline();
+
+        return is_null($callback)
+            ? $pipeline
+            : tap($pipeline, $callback)->exec();
+    }
+
+    /**
+     * Execute commands in a transaction.
+     *
+     * @param  callable  $callback
+     * @return array|\Redis
+     */
+    public function transaction(callable $callback = null)
+    {
+        $transaction = $this->client()->multi();
+
+        return is_null($callback)
+            ? $transaction
+            : tap($transaction, $callback)->exec();
     }
 
     /**
@@ -179,6 +212,17 @@ class PhpRedisConnection extends Connection
     public function createSubscription($channels, Closure $callback, $method = 'subscribe')
     {
         //
+    }
+
+    /**
+     * Execute a raw command.
+     *
+     * @param  array  $parameters
+     * @return mixed
+     */
+    public function executeRaw(array $parameters)
+    {
+        return $this->command('rawCommand', $parameters);
     }
 
     /**

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Question;
 use Session;
+use Image;
 
 class QuestionController extends Controller
 {
@@ -42,63 +43,30 @@ class QuestionController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-           'question_th' => 'required',
-           'choice1_th' => 'required',
-           'choice2_th' => 'required',
-           'choice3_th' => 'required',
-           'choice4_th' => 'required',
-           'answer_th' => 'required',
-           'description_th' => 'required',
-
-           'question_en' => 'required',
-           'choice1_en' => 'required',
-           'choice2_en' => 'required',
-           'choice3_en' => 'required',
-           'choice4_en' => 'required',
-           'answer_en' => 'required',
-           'description_en' => 'required',
-
-           'question_vn' => 'required',
-           'choice1_vn' => 'required',
-           'choice2_vn' => 'required',
-           'choice3_vn' => 'required',
-           'choice4_vn' => 'required',
-           'answer_vn' => 'required',
-           'description_vn' => 'required',
-
-           'order' => 'required',
-
-
+           'title_th' => 'required',
+           'title_en' => 'required',
+           'background_color' => 'required',
+           'cover_file' => 'required|max:8192|image|mimes:jpeg,png,jpg'
        ]);
 
+       $rand = rand();
+       $imageOriginalName = $rand . time();
+       $ext = $request->cover_file->getClientOriginalExtension();
+
+       Image::make($request->cover_file)
+       ->orientate()
+       ->save('uploads/' . $imageOriginalName. '.' . $ext);
+
         $q = new Question();
-        $q->order = $request->order;
-        $q->question_th = $request->question_th;
-        $q->choice1_th = $request->choice1_th;
-        $q->choice2_th = $request->choice2_th;
-        $q->choice3_th = $request->choice3_th;
-        $q->choice4_th = $request->choice4_th;
-        $q->answer_th = $request->answer_th;
-        $q->description_th = $request->description_th;
-        $q->question_en = $request->question_en;
-        $q->choice1_en = $request->choice1_en;
-        $q->choice2_en = $request->choice2_en;
-        $q->choice3_en = $request->choice3_en;
-        $q->choice4_en = $request->choice4_en;
-        $q->answer_en = $request->answer_en;
-        $q->description_en = $request->description_en;
-        $q->question_vn = $request->question_vn;
-        $q->choice1_vn = $request->choice1_vn;
-        $q->choice2_vn = $request->choice2_vn;
-        $q->choice3_vn = $request->choice3_vn;
-        $q->choice4_vn = $request->choice4_vn;
-        $q->answer_vn = $request->answer_vn;
-        $q->description_vn = $request->description_vn;
+        $q->title_th = $request->title_th;
+        $q->title_en = $request->title_en;
+        $q->background_color = $request->background_color;
+        $q->cover_name = $imageOriginalName;
+        $q->cover_ext = $ext;
         $q->save();
 
         Session::flash('success', 'เพิ่มคำถามสำเร็จ');
-
-        return redirect()->action('QuestionController@create');
+        return redirect()->route('q.create');
     }
 
     /**
@@ -120,7 +88,8 @@ class QuestionController extends Controller
      */
     public function edit($id)
     {
-        //
+        $q = Question::find($id);
+        return view('admins/question/edit', ['q' => $q]);
     }
 
     /**
@@ -132,7 +101,39 @@ class QuestionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'title_th' => 'required',
+            'title_en' => 'required',
+            'background_color' => 'required',
+            'cover_file' => 'max:8192|image|mimes:jpeg,png,jpg'
+        ]);
+
+         $q = Question::find($id);
+         
+        if( $request->cover_file) 
+        {
+            $rand = rand();
+            $imageOriginalName = $rand . time();
+            $ext = $request->cover_file->getClientOriginalExtension();
+     
+            Image::make($request->cover_file)
+            ->orientate()
+            ->save('uploads/' . $imageOriginalName. '.' . $ext);
+ 
+        } else {
+            $imageOriginalName = $q->cover_name;
+            $ext = $q->cover_ext;
+        }
+
+        $q->title_th = $request->title_th;
+        $q->title_en = $request->title_en;
+        $q->background_color = $request->background_color;
+        $q->cover_name = $imageOriginalName;
+        $q->cover_ext = $ext;
+        $q->save();
+
+        Session::flash('success', 'แก้ไขคำถามสำเร็จ');
+        return redirect()->route('q.edit', $id);
     }
 
     /**
@@ -143,6 +144,8 @@ class QuestionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Question::destroy($id);
+        Session::flash('success', 'ลบชุดคำถามสำเร็จแล้ว');
+        return json_encode(['success' => 'true']);
     }
 }
