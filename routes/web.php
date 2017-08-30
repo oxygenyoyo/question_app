@@ -47,6 +47,20 @@ Route::group(['prefix' => 'admin'], function () {
   Route::delete('/answer/{id}', 'AnswerController@destroy')->name('a.destroy');
   
 
+  /*
+  ==================================================
+  Choice
+  ==================================================
+  */
+  Route::get('/choice', 'ChoiceController@index')->name('c.index');
+  Route::get('/choice/search', 'ChoiceController@search')->name('c.search');
+  Route::post('/choice', 'ChoiceController@store')->name('c.store');
+  Route::get('/choice/{id}/edit', 'ChoiceController@edit')->name('c.edit');
+  Route::put('/choice/{id}', 'ChoiceController@update')->name('c.update');
+  Route::get('/choice/create', 'ChoiceController@create')->name('c.create');
+  Route::delete('/choice/{id}', 'ChoiceController@destroy')->name('c.destroy');
+  
+
 
 
 });
