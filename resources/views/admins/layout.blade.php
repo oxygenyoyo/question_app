@@ -67,10 +67,10 @@
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
         <li class="header">MAIN NAVIGATION</li>
-        
+        <!-- Question -->
         <li class="treeview">
           <a href="#">
-            <i class="fa fa-laptop"></i> <span> Question</span>
+            <i class="fa fa-question"></i> <span> Question</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -80,7 +80,20 @@
             <li><a href="{{ route('q.create') }}"><i class="fa fa-circle-o"></i> Create new question</a></li>
           </ul>
         </li>
-
+        <!-- Choice -->
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-file-o"></i> <span> Choice</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="{{ route('c.index') }}"><i class="fa fa-circle-o"></i>Choice Lists</a></li>
+            <li><a href="{{ route('c.create') }}"><i class="fa fa-circle-o"></i> Create new choice</a></li>
+          </ul>
+        </li>
+        <!-- Answer -->
         <li class="treeview">
           <a href="#">
             <i class="fa fa-check"></i> <span> Answer</span>
@@ -93,8 +106,11 @@
             <li><a href="{{ route('a.create') }}"><i class="fa fa-circle-o"></i> Create new answer</a></li>
           </ul>
         </li>
-        <li class="header">System</li>
-        <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Logout</span></a></li>
+        
+        
+        <li>
+          <a href="#"><i class="fa fa-circle-o text-red"></i> <span>Logout</span></a>
+        </li>
       </ul>
     </section>
     <!-- /.sidebar -->

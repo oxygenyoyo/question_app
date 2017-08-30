@@ -44,7 +44,7 @@
           </div>
           <!-- /.box-header -->
           <!-- form start -->
-          <form role="form" enctype="multipart/form-data" method="post" action="{{route('a.store')}}">
+          <form role="form" enctype="multipart/form-data" method="post" action="{{route('q.store')}}">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             
             

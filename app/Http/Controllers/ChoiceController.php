@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Choice;
+use App\Answer;
+use App\Question;
 use Session;
 use Image;
 
@@ -17,7 +19,10 @@ class ChoiceController extends Controller
     public function index()
     {
         $c = Choice::paginate(15);
-        return view('admins/choice/index', ['choices' => $c]);
+        
+        return view('admins/choice/index', [
+            'choices' => $c
+        ]);
     }
 
     /**
@@ -27,7 +32,12 @@ class ChoiceController extends Controller
      */
     public function create()
     {
-        //
+        $answers = Answer::all();
+        $questions = Question::all();
+        return view('admins/choice/create', [
+            'answers' => $answers,
+            'questions' => $questions
+        ]);
     }
 
     /**
@@ -38,7 +48,35 @@ class ChoiceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'title_th' => 'required',
+            'title_en' => 'required',
+            'answer_id' => 'required',
+            'question_id' => 'required',
+            'order' => 'required',
+            'image_file' => 'required|max:8192|image|mimes:jpeg,png,jpg'
+        ]);
+ 
+        $rand = rand();
+        $imageOriginalName = $rand . time();
+        $ext = $request->image_file->getClientOriginalExtension();
+ 
+        Image::make($request->image_file)
+        ->orientate()
+        ->save('uploads/' . $imageOriginalName. '.' . $ext);
+ 
+         $c = new Choice();
+         $c->title_th = $request->title_th;
+         $c->title_en = $request->title_en;
+         $c->answer_id = $request->answer_id;
+         $c->question_id = $request->question_id;
+         $c->order = $request->order;
+         $c->image_name = $imageOriginalName;
+         $c->ext = $ext;
+         $c->save();
+ 
+         Session::flash('success', 'เพิ่มตัวเลือกสำเร็จ');
+         return redirect()->route('c.create');
     }
 
     /**
@@ -60,7 +98,15 @@ class ChoiceController extends Controller
      */
     public function edit($id)
     {
-        //
+        $c = Choice::find($id);
+        $answers = Answer::all();
+        $questions = Question::all();
+        
+        return view('admins/choice/edit', [
+            'c' => $c,
+            'answers' => $answers,
+            'questions' => $questions
+        ]);
     }
 
     /**
@@ -72,7 +118,45 @@ class ChoiceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'title_th' => 'required',
+            'title_en' => 'required',
+            'answer_id' => 'required',
+            'question_id' => 'required',
+            'order' => 'required',
+            'image_file' => 'max:8192|image|mimes:jpeg,png,jpg'
+        ]);
+
+        $c = Choice::find($id);
+        
+        if( $request->image_file) 
+        {
+            $rand = rand();
+            $imageOriginalName = $rand . time();
+            $ext = $request->image_file->getClientOriginalExtension();
+     
+            Image::make($request->image_file)
+            ->orientate()
+            ->save('uploads/' . $imageOriginalName. '.' . $ext);
+ 
+        } else {
+            $imageOriginalName = $c->image_name;
+            $ext = $c->ext;
+        }
+ 
+ 
+         $c = new Choice();
+         $c->title_th = $request->title_th;
+         $c->title_en = $request->title_en;
+         $c->answer_id = $request->answer_id;
+         $c->question_id = $request->question_id;
+         $c->order = $request->order;
+         $c->image_name = $imageOriginalName;
+         $c->ext = $ext;
+         $c->save();
+ 
+         Session::flash('success', 'แก้ไขตัวเลือกสำเร็จ');
+         return redirect()->route('c.edit', $id);
     }
 
     /**

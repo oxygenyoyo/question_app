@@ -46,8 +46,10 @@
                 <tbody>
                   <tr>
                     <th>id</th>
-                    <th>title th</th>
-                    <th>title en</th>
+                    <th>title TH</th>
+                    <th>title EN</th>
+                    <th>Link TH</th>
+                    <th>Link EN</th>
                     <th>Action</th>
                   </tr>
 
@@ -57,6 +59,13 @@
                     <td>{{$question->id}}</td>
                     <td>{{$question->title_th}}</td>
                     <td>{{$question->title_en}}</td>
+                    <td>
+                      <a target="_blank" href="{{route('q.show', ['th', $question->id])}}">{{route('q.show', ['th', $question->id])}}</a>
+                    </td>
+                    <td>
+                      <a target="_blank" href="{{route('q.show', ['en', $question->id])}}">{{route('q.show', ['en', $question->id])}}</a>
+                    </td>
+                    
                     <td>
                       <a href="{{route('q.edit', $question->id)}}" class="btn btn-default">Edit</a>
                       <button data-del-url="{{ route('q.destroy',$question->id)}}" class="btn btn-danger del-btn" data-toggle="modal" data-target="#delConfirmModal">

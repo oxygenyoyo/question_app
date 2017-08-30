@@ -20,10 +20,10 @@
         <div class="box box-primary">
           <div class="box-header with-border">
             <div class="col-md-2">
-              <h3 class="box-title">Answer List</h3>
+              <h3 class="box-title">Choice List</h3>
             </div>
             <div class="col-md-3">
-              <a href="{{ route('a.create') }}" class="btn btn-primary"> Add new Answer</a>
+              <a href="{{ route('c.create') }}" class="btn btn-primary"> Add new Choice</a>
             </div>
             <div class="col-md-7">
               <form action="" method="get">
@@ -51,15 +51,15 @@
                     <th>Action</th>
                   </tr>
 
-                  @foreach ($answers as $answer)
+                  @foreach ($choices as $choice)
 
                   <tr>
-                    <td>{{$answer->id}}</td>
-                    <td>{{$answer->title_th}}</td>
-                    <td>{{$answer->title_en}}</td>
+                    <td>{{$choice->id}}</td>
+                    <td>{{$choice->title_th}}</td>
+                    <td>{{$choice->title_en}}</td>
                     <td>
-                      <a href="{{route('a.edit', $answer->id)}}" class="btn btn-default">Edit</a>
-                      <button data-del-url="{{ route('a.destroy',$answer->id)}}" class="btn btn-danger del-btn" data-toggle="modal" data-target="#delConfirmModal">
+                      <a href="{{route('c.edit', $choice->id)}}" class="btn btn-default">Edit</a>
+                      <button data-del-url="{{ route('c.destroy',$choice->id)}}" class="btn btn-danger del-btn" data-toggle="modal" data-target="#delConfirmModal">
                         Delete
                       </button>
                     </td>
@@ -70,7 +70,7 @@
                 </tbody>
               </table>
               <div class="text-center">
-                {{ $answers->links() }}  
+                {{ $choices->links() }}  
               </div>
               
             </div>

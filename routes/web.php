@@ -67,8 +67,8 @@ Route::group(['prefix' => 'admin'], function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/{lang}/test/{id}', 'HomeController@test')->name('test');
-Route::get('/{lang}/start', 'HomeController@start')->name('start');
+Route::get('/{lang}/{id}', 'QuestionController@show')->name('q.show');
+Route::get('/{lang}/{id}/{choice_id}', 'QuestionController@test')->name('q.test');
 Route::get('/{lang}/finish', 'HomeController@finish')->name('finish');
 Route::post('/{lang}/test/{id}', 'HomeController@answer')->name('answer');
 

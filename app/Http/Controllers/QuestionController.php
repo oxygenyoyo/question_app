@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Question;
+use App\Choice;
+use App\Answer;
 use Session;
 use Image;
 
@@ -11,7 +13,19 @@ class QuestionController extends Controller
 {
     function __construct() 
     {
-        $this->middleware('auth');
+        $this->middleware('auth', ['except' => 'test']);
+    }
+
+    public function test($lang, $q_id, $choice_id) 
+    {
+        $choice = Choice::find($choice_id);
+        $answers = Answer::all();
+        return view('survey', [
+            'choice' => $choice,
+            'question_id' => $q_id,
+            'answers' => $answers,
+            'lang' => $lang
+        ]);
     }
     /**
      * Display a listing of the resource.
@@ -75,9 +89,17 @@ class QuestionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($lang, $id)
     {
-        //
+        $question = Question::find($id);
+        $choice = Choice::where('question_id', $question->id)
+                    ->orderBy('order', 'ASC')
+                    ->first();
+        return view('test', [
+            'question' => $question,
+            'choice' => $choice,
+            'lang' => $lang
+        ]);
     }
 
     /**

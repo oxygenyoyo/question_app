@@ -17,8 +17,8 @@ class CreateChoicesTable extends Migration
             $table->increments('id');
             $table->string('image_name');
             $table->string('ext');
-            $table->string('title_th');
-            $table->string('title_en');
+            $table->text('title_th');
+            $table->text('title_en');
             $table->integer('answer_id')->unsigned();
             $table->integer('question_id')->unsigned();
             $table->integer('order')->unsigned()->default(1);

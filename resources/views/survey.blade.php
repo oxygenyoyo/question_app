@@ -5,50 +5,33 @@
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
       <div class="panel panel-default">
-        <form action="{{route('answer', [$lang, $id])}}" method="post">
+        <form action="{{route('answer', [$lang, $question_id, $choice->id])}}" method="post">
           {{ csrf_field() }}
-          <div class="panel-heading">Q: {{$question->question_th}}</div>
-          <div class="panel-body">
-            @if( $didTest )
-              คุณทำข้อนี้ไปแล้ว
-      
-            @else 
-              <div class="radio">
-                <label>
-                  <input type="radio" name="answer" id="optionsRadios1" value="1">
-                  {{$question->choice1_th}}
-                </label>
-              </div>
-              <div class="radio">
-                <label>
-                  <input type="radio" name="answer" id="optionsRadios1" value="1">
-                  {{$question->choice2_th}}
-                </label>
-              </div>
-              <div class="radio">
-                <label>
-                  <input type="radio" name="answer" id="optionsRadios1" value="1">
-                  {{$question->choice3_th}}
-                </label>
-              </div>
-              <div class="radio">
-                <label>
-                  <input type="radio" name="answer" id="optionsRadios1" value="1">
-                  {{$question->choice4_th}}
-                </label>
-              </div>
-              <button type="submit" class="btn btn-primary">ตอบ</button>
-            @endif
-            
+          <div class="panel-heading">
+            <img style="max-width:100%;" src="{{URL::asset('uploads/' . $choice->image_name . '.' . $choice->ext)}}" alt="">
           </div>
-          @if( $didTest )
-            <div class="panel-body">
-              {{$question->description_th}}
+          <!-- /.panel-heading -->
+          <div class="panel-body">
+            @foreach($answers->chunk(2) as $chunk) 
+            <div class="form-group">
+              @foreach($chunk as $answer)
+                <div class="radio">
+                  <label>
+                  <input type="radio" name="answer" id="answer-{{$answer->id}}" value="{{$answer->id}}"> 
+                    {{$answer->title_th}}
+                  </label>
+                </div>
+              @endforeach
             </div>
-          @endif
-          <div class="panel-body">
-            <a href="{{route('home')}}" class="btn btn-primary">กลับไปหน้าแรก</a>
+            @endforeach
           </div>
+          <!-- /.panel-body -->
+          <div class="box-footer">
+            <button type="submit" class="btn btn-lg btn-block btn-primary">ตอบ</button>
+          </div>
+          <!-- /.box-footer -->
+          
+          
         </form>
       </div>
     </div>
