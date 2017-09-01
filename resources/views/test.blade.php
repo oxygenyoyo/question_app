@@ -18,7 +18,7 @@
 	
 	</style>
 </head>
-<body>
+<body style="background-color:{{$question->background_color}};">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-offset-1 col-md-10 col-xs-offset-1 col-xs-10">

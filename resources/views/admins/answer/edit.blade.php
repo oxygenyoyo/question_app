@@ -58,10 +58,25 @@
                 <input value="{{$a->title_en}}" type="text" class="form-control" name="title_en" id="title_en" placeholder="">
               </div>
               <!-- /.form-group --> 
+              <div class="form-group">
+                <label>เลือกชุดคำถามที่จะเอาตัวเลือกไปอยู่ในชุดคำถามนั้น ต้อง set อันนี้เพราะจะได้แสดงคำตอบทั้งหมดของชุดคำถามนั้นๆ</label>
+                <select name="question_id" class="form-control">
+                  @foreach($questions as $question)
+                    <?php 
+                      $checked = '';
+                      if ($question->id == $a->question_id) {
+                        $checked = ' selected ';
+                      }
+                    ?>
+                    <option {{$checked}} value="{{$question->id}}">{{$question->title_th}} | {{$question->title_en}}</option>
+                  @endforeach
+                </select>
+              </div>
+              <!-- /.form-group -->  
             </div>
             <!-- /.box-body -->
             <div class="box-footer">
-              <button type="submit" class="btn btn-primary">สร้างคำถาม</button>
+              <button type="submit" class="btn btn-primary">แก้ไขคำตอบ</button>
             </div>
           </form>
         </div>

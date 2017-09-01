@@ -5,9 +5,25 @@
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
       <div class="panel panel-default">
-        <form action="{{route('answer', [$lang, $question_id, $choice->id])}}" method="post">
+        <form action="{{route('q.answer', [$lang, $question->id, $choice->id])}}" method="post">
           {{ csrf_field() }}
+          
           <div class="panel-heading">
+            @isset($hint) 
+              <div class="box-body">
+                <div class="callout callout-success">
+                  <h4><i class="icon fa fa-check"></i> 
+                    @if( $lang == 'th')
+                    เฉลย
+                    @else 
+                    The answer is
+                    @endif
+                  </h4>
+                    <p> {{$hint}}</p>
+                </div>
+              </div>
+            @endif
+            <p>Score: {{$score}}</p>
             <img style="max-width:100%;" src="{{URL::asset('uploads/' . $choice->image_name . '.' . $choice->ext)}}" alt="">
           </div>
           <!-- /.panel-heading -->
@@ -15,10 +31,25 @@
             @foreach($answers->chunk(2) as $chunk) 
             <div class="form-group">
               @foreach($chunk as $answer)
+                <?php
+                $disabled = false;
+                if ( !empty(Session::get('answer')) ) {
+                  if (array_search( $answer->id, Session::get('answer')) !== false ) {
+                    $disabled = true ;
+                  }
+                }
+                ?>
                 <div class="radio">
                   <label>
-                  <input type="radio" name="answer" id="answer-{{$answer->id}}" value="{{$answer->id}}"> 
-                    {{$answer->title_th}}
+                  @if ($disabled == false)
+                    <input type="radio" name="answer" id="answer-{{$answer->id}}" value="{{$answer->id}}"> 
+                  @endif
+                  
+                    @if($lang == 'th')
+                      {{$answer->title_th}}
+                    @else 
+                      {{$answer->title_en}}
+                    @endif
                   </label>
                 </div>
               @endforeach
@@ -27,7 +58,25 @@
           </div>
           <!-- /.panel-body -->
           <div class="box-footer">
-            <button type="submit" class="btn btn-lg btn-block btn-primary">ตอบ</button>
+            @isset($hint) 
+              <a href="{{$nextQuestion}}" class="btn btn-lg btn-block btn-primary">
+                @if($lang == 'th')
+                  ไปทำข้อต่อไป
+                @else 
+                  Next question
+                @endif
+              </a>
+            @else
+              <button type="submit" class="btn btn-lg btn-block btn-primary">
+                
+                @if($lang == 'th')
+                  ตอบ
+                @else 
+                  Answer
+                @endif
+              </button>
+            @endisset
+            
           </div>
           <!-- /.box-footer -->
           

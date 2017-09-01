@@ -57,6 +57,15 @@
                 <input type="text" class="form-control" name="title_en" id="title_en" placeholder="">
               </div>
               <!-- /.form-group --> 
+              <div class="form-group">
+                <label>เลือกชุดคำถามที่จะเอาตัวเลือกไปอยู่ในชุดคำถามนั้น ต้อง set อันนี้เพราะจะได้แสดงคำตอบทั้งหมดของชุดคำถามนั้นๆ</label>
+                <select name="question_id" class="form-control">
+                  @foreach($questions as $question)
+                    <option value="{{$question->id}}">{{$question->title_th}} | {{$question->title_en}}</option>
+                  @endforeach
+                </select>
+              </div>
+              <!-- /.form-group --> 
             </div>
             <!-- /.box-body -->
             <div class="box-footer">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Answer;
+use App\Question;
 use Session;
 use Image;
 
@@ -21,7 +22,9 @@ class AnswerController extends Controller
     public function index()
     {
         $answers = Answer::paginate(15);
-        return view('admins/answer/index', ['answers' => $answers]);
+        return view('admins/answer/index', [
+            'answers' => $answers,
+        ]);
     }
 
     /**
@@ -31,7 +34,10 @@ class AnswerController extends Controller
      */
     public function create()
     {
-        return view('admins/answer/create');
+        $questions = Question::all();
+        return view('admins/answer/create',[
+            'questions' => $questions
+        ]);
     }
 
     /**
@@ -45,11 +51,13 @@ class AnswerController extends Controller
         $this->validate($request, [
             'title_th' => 'required',
             'title_en' => 'required',
+            'question_id' => 'required'
         ]);
 
         $a = new Answer();
         $a->title_th = $request->title_th;
         $a->title_en = $request->title_en;
+        $a->question_id = $request->question_id;
         $a->save();
 
         Session::flash('success', 'เพิ่มคำตอบสำเร็จ');
@@ -76,7 +84,11 @@ class AnswerController extends Controller
     public function edit($id)
     {
         $a = Answer::find($id);
-        return view('admins/answer/edit', ['a' => $a]);
+        $questions = Question::all();
+        return view('admins/answer/edit', [
+            'a' => $a,
+            'questions' => $questions
+        ]);
     }
 
     /**
@@ -91,12 +103,14 @@ class AnswerController extends Controller
         $this->validate($request, [
             'title_th' => 'required',
             'title_en' => 'required',
+            'question_id' => 'required'
         ]);
 
         $a = Answer::find($id);
         $a->title_th = $request->title_th;
         $a->title_en = $request->title_en;
-        $a->save();
+        $a->question_id = $request->question_id;
+        $a->update();
 
         Session::flash('success', 'แก้ไขคำตอบสำเร็จ');
         return redirect()->route('a.edit', $id);

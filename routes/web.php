@@ -69,6 +69,9 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/{lang}/{id}', 'QuestionController@show')->name('q.show');
 Route::get('/{lang}/{id}/{choice_id}', 'QuestionController@test')->name('q.test');
-Route::get('/{lang}/finish', 'HomeController@finish')->name('finish');
+Route::post('/{lang}/{id}/{choice_id}', 'QuestionController@answer')->name('q.answer');
+Route::get('/finish', 'QuestionController@finish_page')->name('finish.page');
+Route::post('/finish', 'QuestionController@finish')->name('finish');
+
 Route::post('/{lang}/test/{id}', 'HomeController@answer')->name('answer');
 

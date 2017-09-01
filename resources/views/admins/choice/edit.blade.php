@@ -79,7 +79,7 @@
                     <?php 
                       $checked = '';
                       if ($question->id == $c->question_id) {
-                        $checked = ' checked ';
+                        $checked = ' selected ';
                       }
                     ?>
                     <option {{$checked}} value="{{$question->id}}">{{$question->title_th}} | {{$question->title_en}}</option>
@@ -94,7 +94,7 @@
                     <?php 
                       $checked = '';
                       if ($answer->id == $c->answer_id) {
-                        $checked = ' checked ';
+                        $checked = ' selected ';
                       }
                     ?>
                     <option {{$checked}} value="{{$answer->id}}">{{$answer->title_th}} | {{$answer->title_en}}</option>
