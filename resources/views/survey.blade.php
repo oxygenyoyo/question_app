@@ -5,31 +5,30 @@
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
       <div class="panel panel-default">
-        <form action="{{route('q.answer', [$lang, $question->id, $choice->id])}}" method="post">
+        <form action="{{route('q.result', [$lang, $question->id, $choice->id])}}" method="post">
           {{ csrf_field() }}
           
           <div class="panel-heading">
             @isset($hint) 
               <div class="box-body">
-                <div class="callout callout-success">
-                  <h4><i class="icon fa fa-check"></i> 
+                <div class="callout callout-danger">
+                  <h4><i class="icon fa fa-ban"></i> 
                     @if( $lang == 'th')
                     เฉลย
                     @else 
                     The answer is
                     @endif
                   </h4>
-                    <p> {{$hint}}</p>
+                    <p>{{$hint}}</p>
                 </div>
               </div>
             @endif
-            <p>Score: {{$score}}</p>
             <img style="max-width:100%;" src="{{URL::asset('uploads/' . $choice->image_name . '.' . $choice->ext)}}" alt="">
           </div>
           <!-- /.panel-heading -->
           <div class="panel-body">
             @foreach($answers->chunk(2) as $chunk) 
-            <div class="form-group">
+            <div class="form-group col-md-6">
               @foreach($chunk as $answer)
                 <?php
                 $disabled = false;
@@ -44,12 +43,14 @@
                   @if ($disabled == false)
                     <input type="radio" name="answer" id="answer-{{$answer->id}}" value="{{$answer->id}}"> 
                   @endif
-                  
-                    @if($lang == 'th')
-                      {{$answer->title_th}}
-                    @else 
-                      {{$answer->title_en}}
-                    @endif
+                    <span class="text-large">
+                      @if($lang == 'th')
+                        {{$answer->title_th}}
+                      @else 
+                        {{$answer->title_en}}
+                      @endif
+                    </span>
+                    
                   </label>
                 </div>
               @endforeach

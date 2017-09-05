@@ -7,7 +7,10 @@
       <div class="panel panel-default">
           <!-- /.panel-heading -->
           <div class="panel-heading">
-            Thank you. you can do it again, if you want more score
+            <h1>
+              Congratulation your score is {{$score}}
+            </h1>
+            <h2>Thank you. you can do it again, if you want more score</h2>
           </div>
       </div>
     </div>

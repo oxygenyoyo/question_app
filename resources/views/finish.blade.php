@@ -8,9 +8,6 @@
         <form action="{{route('finish')}}" method="post">
           {{ csrf_field() }}
           <!-- /.panel-heading -->
-          <div class="panel-heading">
-            Congratulation your score is {{$score}}
-          </div>
           <div class="panel-body">
             <div class="form-group">
                 <label for="email">Fill an email to get reward.</label>

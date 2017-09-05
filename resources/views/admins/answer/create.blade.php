@@ -69,7 +69,7 @@
             </div>
             <!-- /.box-body -->
             <div class="box-footer">
-              <button type="submit" class="btn btn-primary">สร้างคำถาม</button>
+              <button type="submit" class="btn btn-primary">สร้างคำตอบ</button>
             </div>
           </form>
         </div>

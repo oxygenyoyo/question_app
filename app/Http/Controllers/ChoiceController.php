@@ -143,20 +143,20 @@ class ChoiceController extends Controller
             $imageOriginalName = $c->image_name;
             $ext = $c->ext;
         }
- 
- 
-         $c = new Choice();
-         $c->title_th = $request->title_th;
-         $c->title_en = $request->title_en;
-         $c->answer_id = $request->answer_id;
-         $c->question_id = $request->question_id;
-         $c->order = $request->order;
-         $c->image_name = $imageOriginalName;
-         $c->ext = $ext;
-         $c->save();
- 
-         Session::flash('success', 'แก้ไขตัวเลือกสำเร็จ');
-         return redirect()->route('c.edit', $id);
+        
+    
+        
+        $c->title_th = $request->title_th;
+        $c->title_en = $request->title_en;
+        $c->answer_id = $request->answer_id;
+        $c->question_id = $request->question_id;
+        $c->order = $request->order;
+        $c->image_name = $imageOriginalName;
+        $c->ext = $ext;
+        $c->save();
+
+        Session::flash('success', 'แก้ไขตัวเลือกสำเร็จ');
+        return redirect()->route('c.edit', $id);
     }
 
     /**
@@ -167,6 +167,8 @@ class ChoiceController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Choice::destroy($id);
+        Session::flash('success', 'ลบคำถามสำเร็จแล้ว');
+        return json_encode(['success' => 'true']);
     }
 }

@@ -151,7 +151,7 @@ $('#del-btn').on('click', function(e) {
       if(res.success == 'true') {
         $('.del-clicked').closest('tr').remove()
         $('#delConfirmModal').modal('toggle');
-        alert('ลบคำตอบสำเร็จแล้ว');
+        alert('ลบคำถามสำเร็จแล้ว');
       }
     }
   });

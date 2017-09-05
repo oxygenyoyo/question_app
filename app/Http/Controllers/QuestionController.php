@@ -16,7 +16,7 @@ class QuestionController extends Controller
     function __construct() 
     {
         $this->middleware('auth', ['except' => 
-            ['test', 'answer', 'show', 'finish_page', 'finish']
+            ['test', 'answer', 'show', 'finish_page', 'finish', 'result']
         ]);
     }
 
@@ -25,16 +25,20 @@ class QuestionController extends Controller
         $this->validate($request, [
             'email' => 'required|email',
         ]);   
-        
+        // echo '<pre>';
+        // print_r(Session::all());
+        // echo '</pre>';
         $guest = Guest::find(Session::get('user_id'));
         $guest->email = $request->email;
         $guest->update();
-        
+        $score = (Session::get('score'))?Session::get('score'):0;
         Session::forget('user_id');
         Session::forget('username');
         Session::forget('answer');
         Session::forget('score');
-        return view('thankyou');
+        return view('thankyou', [
+            'score' => $score
+        ]);
     }
 
     public function finish_page()
@@ -43,16 +47,23 @@ class QuestionController extends Controller
         return view('finish', ['score' => $score]);
     }
 
-    public function answer(Request $request, $lang, $question_id, $choice_id) 
+    
+
+    public function result(Request $request, $lang, $question_id, $choice_id) 
     {
+        // no user_id then redirect to start survey
         if ( empty(Session::get('user_id'))) {
             return redirect()->route('q.show', [$lang, $question_id]);
         }
-        // var_dump($lang, $question_id, $choice_id);die();
+        
+
         $this->validate($request, [
             'answer' => 'required'
         ]);
-        
+
+        $choice = Choice::where('id', $choice_id)->with('answer')->first();
+        $question = Question::find($question_id);
+
         
         $is_correct = false;
         $c = Choice::find($choice_id);
@@ -60,106 +71,74 @@ class QuestionController extends Controller
         if ( $isAnswerCorrectThenAddScore ) {
             Session::put('score', Session::get('score') + 1);
             $is_correct = true;
-
-
-            $au = new Answer_users();
-            $au->question_id = $question_id;
-            $au->answer = $request->answer;
-            $au->choice_id = $choice_id;
-            $au->is_correct = $is_correct;
-            $au->user_id = Session::get('user_id');
-            $au->save();
-
-            // correct answer 
-            if ( !empty(Session::get('answer'))) {
-                $test = Session::get('answer');
-                array_push($test, $c->answer_id);
-                Session::put('answer', $test);
-            } else {
-                Session::put('answer', [$request->answer]);
-            }
-            
-
-            // check has next question
-            $answeredRows = Answer_users::where([
-                'question_id' => $question_id,
-                'user_id' => Session::get('user_id')
-            ])->get();
-            $answered = [];
-            foreach($answeredRows as $answeredRow) {
-                array_push($answered, $answeredRow->choice_id);
-            }
-            
-            $nextChoice = Choice::where('question_id', $question_id)
-            ->whereNotIn('id', $answered)
-            ->orderBy('order', 'ASC')
-            ->orderBy('id', 'ASC')
-            ->first();
-            
-            
-
-            if ( empty($nextChoice) ) {
-                return redirect()->route('finish.page');
-            } else {
-                return redirect()->route('q.test',[$lang, $question_id, $nextChoice->id]);
-            }
-        } else {
-            $au = new Answer_users();
-            $au->question_id = $question_id;
-            $au->answer = $request->answer;
-            $au->choice_id = $choice_id;
-            $au->is_correct = $is_correct;
-            $au->user_id = Session::get('user_id');
-            $au->save();
-
-            $choice = Choice::where('id', $choice_id)->with('answer')->first();
-            $question = Question::find($question_id);
-            $answers = Answer::all();
-            $score = (Session::get('score'))? Session::get('score'):0;
-    
-            if ($lang == 'th') {
-                $hint = $choice->answer->title_th;
-            } else {
-                $hint = $choice->answer->title_en;
-            }
-
-            // check has next question
-            $answeredRows = Answer_users::where([
-                'question_id' => $question_id,
-                'user_id' => Session::get('user_id')
-            ])->get();
-            $answered = [];
-            foreach($answeredRows as $answeredRow) {
-                array_push($answered, $answeredRow->choice_id);
-            }
-            
-            $nextChoice = Choice::where('question_id', $question_id)
-            ->whereNotIn('id', $answered)
-            ->orderBy('order', 'ASC')
-            ->orderBy('id', 'ASC')
-            ->first();
-            
-
-            if ( empty($nextChoice) ) {
-                return redirect()->route('finish.page');
-            } else {
-                return view('survey', [
-                    'choice' => $choice,
-                    'question' => $question,
-                    'answers' => $answers,
-                    'lang' => $lang,
-                    'score' => $score,
-                    'hint' => $hint,
-                    'nextQuestion' => route('q.test',[$lang, $question_id, $nextChoice->id])
-                ]);
-            }
         }
+        if ($lang == 'th') {
+            $hint = $choice->answer->title_th;
+        } else {
+            $hint = $choice->answer->title_en;
+        }
+        
+        // when the answer wrong notice user 
+        $au = new Answer_users();
+        $au->question_id = $question_id;
+        $au->answer = $request->answer;
+        $au->choice_id = $choice_id;
+        $au->is_correct = $is_correct;
+        $au->user_id = Session::get('user_id');
+        $au->save();
+
+        // correct answer 
+        if ( !empty(Session::get('answer'))) {
+            $test = Session::get('answer');
+            array_push($test, $c->answer_id);
+            Session::put('answer', $test);
+        } else {
+            Session::put('answer', [$c->answer_id]);
+        }
+
+         // check has next question
+         $answeredRows = Answer_users::where([
+            'question_id' => $question_id,
+            'user_id' => Session::get('user_id')
+        ])->get();
+        $answered = [];
+        foreach($answeredRows as $answeredRow) {
+            array_push($answered, $answeredRow->choice_id);
+        }
+        
+        $nextChoice = Choice::where('question_id', $question_id)
+        ->whereNotIn('id', $answered)
+        ->orderBy('order', 'ASC')
+        ->orderBy('id', 'ASC')
+        ->first();
+        
+        
+        
+        $nextPage = '';
+        if ( empty($nextChoice) ) {
+            $nextPage = route('finish.page');
+        } else {
+            $nextPage = route('q.test',[$lang, $question_id, $nextChoice->id]);
+        }
+        return view('result', [
+            'choice' => $choice,
+            'question' => $question,
+            'lang' => $lang,
+            'hint' => $hint,
+            'is_correct' => $is_correct,
+            'nextQuestion' => $nextPage
+        ]);
+    
     }
 
     public function test($lang, $question_id, $choice_id) 
     {
+        
         // echo '<pre>';
-        // print_r(Session::all());die();
+        // print_r(Session::all());
+        // echo '</pre>';
+        
+        // die();
         if ( empty( Session::get('user_id') ) ) {
             return redirect()->route('q.show', [$lang, $question_id]);
         }
@@ -174,7 +153,7 @@ class QuestionController extends Controller
         if ( $hasEverDoThisTestThenRedirectToLastQuestion ) {
             $choice = Choice::where('id', $choice_id)->with('answer')->first();
             $question = Question::find($question_id);
-            $answers = Answer::all();
+            $answers = Answer::where('question_id', $question_id)->get();
             $score = (Session::get('score'))? Session::get('score'):0;
     
             if ($lang == 'th') {
@@ -217,7 +196,7 @@ class QuestionController extends Controller
 
         $choice = Choice::find($choice_id);
         $question = Question::find($question_id);
-        $answers = Answer::all();
+        $answers = Answer::where('question_id', $question_id)->get();
         $score = (Session::get('score'))? Session::get('score'):0;
 
         
@@ -294,7 +273,13 @@ class QuestionController extends Controller
      */
     public function show($lang, $id)
     {
-        
+        // has session then remove it
+        if ( Session::get('user_id') ) {
+            Session::forget('user_id');
+            Session::forget('username');
+            Session::forget('answer');
+            Session::forget('score');
+        }
         // gen guest user
         if ( empty( Session::get('user_id') ) ) {
             $username = 'guest' . sha1(time());
@@ -306,7 +291,7 @@ class QuestionController extends Controller
             Session::put('user_id' , $g->id);
         } 
         
-        echo 'Session: ' . Session::get('user_id');
+        
         
         $question = Question::find($id);
         $choice = Choice::where('question_id', $question->id)
