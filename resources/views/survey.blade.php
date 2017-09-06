@@ -27,22 +27,31 @@
           </div>
           <!-- /.panel-heading -->
           <div class="panel-body">
+            <p class="text-large">
+            @if($lang == 'th')
+              โปรดเลือกหนึ่งในพฤติกรรมต่อไปนี้ที่เกี่ยวข้องกับข้อความในภาพด้านบนมากที่สุด
+            @else 
+              Please select one of the following behavior items that matches with the caption in the picture.
+            @endif
+            </p>
+            
             @foreach($answers->chunk(2) as $chunk) 
-            <div class="form-group col-md-6">
+            <div class="form-group row">
               @foreach($chunk as $answer)
-                <?php
-                $disabled = false;
-                if ( !empty(Session::get('answer')) ) {
-                  if (array_search( $answer->id, Session::get('answer')) !== false ) {
-                    $disabled = true ;
-                  }
+              <?php
+              $disabled = false;
+              if ( !empty(Session::get('answer')) ) {
+                if (array_search( $answer->id, Session::get('answer')) !== false ) {
+                  $disabled = true ;
                 }
-                ?>
+              }
+              ?>
+              <div class="col-md-6">
                 <div class="radio">
                   <label>
-                  @if ($disabled == false)
-                    <input type="radio" name="answer" id="answer-{{$answer->id}}" value="{{$answer->id}}"> 
-                  @endif
+                    @if ($disabled == false)
+                      <input type="radio" name="answer" id="answer-{{$answer->id}}" value="{{$answer->id}}"> 
+                    @endif
                     <span class="text-large">
                       @if($lang == 'th')
                         {{$answer->title_th}}
@@ -50,9 +59,9 @@
                         {{$answer->title_en}}
                       @endif
                     </span>
-                    
                   </label>
                 </div>
+              </div>
               @endforeach
             </div>
             @endforeach

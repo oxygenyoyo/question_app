@@ -32,6 +32,9 @@
         font-size:20px;
         color:blue;
     }
+    .result-text {
+        font-size:16px;
+    }
     </style>
 </head>
 @isset($question->background_color)

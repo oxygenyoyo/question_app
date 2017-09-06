@@ -24,7 +24,7 @@
                   The answer is
                   @endif
                 </h4>
-                  <p>{{$hint}}</p>
+                  <p class="result-text">{{$hint}}</p>
               </div>
             </div>
           @endif

@@ -66,12 +66,13 @@ Route::group(['prefix' => 'admin'], function () {
 });
 Auth::routes();
 
+Route::get('/{lang}/finish', 'QuestionController@finish_page')->name('finish.page');
+Route::post('/finish', 'QuestionController@finish')->name('finish');
+
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/{lang}/{id}', 'QuestionController@show')->name('q.show');
 Route::get('/{lang}/{id}/{choice_id}', 'QuestionController@test')->name('q.test');
 Route::post('/{lang}/{id}/{choice_id}', 'QuestionController@result')->name('q.result');
-Route::get('/finish', 'QuestionController@finish_page')->name('finish.page');
-Route::post('/finish', 'QuestionController@finish')->name('finish');
 
 Route::post('/{lang}/test/{id}', 'HomeController@answer')->name('answer');
 

@@ -41,10 +41,13 @@ class QuestionController extends Controller
         ]);
     }
 
-    public function finish_page()
+    public function finish_page($lang)
     {
         $score = (Session::get('score') > 0)?Session::get('score'):0;
-        return view('finish', ['score' => $score]);
+        return view('finish', [
+            'lang' => $lang,
+            'score' => $score
+            ]);
     }
 
     
@@ -116,7 +119,7 @@ class QuestionController extends Controller
         
         $nextPage = '';
         if ( empty($nextChoice) ) {
-            $nextPage = route('finish.page');
+            $nextPage = route('finish.page', [$lang]);
         } else {
             $nextPage = route('q.test',[$lang, $question_id, $nextChoice->id]);
         }
@@ -180,7 +183,7 @@ class QuestionController extends Controller
             
 
             if ( empty($nextChoice) ) {
-                return redirect()->route('finish.page');
+                return redirect()->route('finish.page', [$lang]);
             } else {
                 return view('survey', [
                     'choice' => $choice,
