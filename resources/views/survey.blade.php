@@ -27,7 +27,7 @@
           </div>
           <!-- /.panel-heading -->
           <div class="panel-body">
-            <p class="text-large">
+            <p class="text-large text-black">
             @if($lang == 'th')
               โปรดเลือกหนึ่งในพฤติกรรมต่อไปนี้ที่เกี่ยวข้องกับข้อความในภาพด้านบนมากที่สุด
             @else 

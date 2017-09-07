@@ -33,6 +33,7 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('/question/create', 'QuestionController@create')->name('q.create');
   Route::delete('/question/{id}', 'QuestionController@destroy')->name('q.destroy');
 
+  Route::get('/question/state/{id}', 'QuestionController@state_list')->name('q.state.list');
   /*
   ==================================================
   Answer

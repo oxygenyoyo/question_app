@@ -45,7 +45,7 @@
               <table class="table table-hover">
                 <tbody>
                   <tr>
-                    <th>id</th>
+                    <th>Data</th>
                     <th>title TH</th>
                     <th>title EN</th>
                     <th>Link TH</th>
@@ -56,7 +56,7 @@
                   @foreach ($questions as $question)
 
                   <tr>
-                    <td>{{$question->id}}</td>
+                    <td><a href="{{route('q.state.list', [$question->id])}}">State</a></td>
                     <td>{{$question->title_th}}</td>
                     <td>{{$question->title_en}}</td>
                     <td>

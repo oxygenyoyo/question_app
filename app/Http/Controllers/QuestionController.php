@@ -20,6 +20,15 @@ class QuestionController extends Controller
         ]);
     }
 
+    public function state_list($question_id) 
+    {
+        $aus = Answer_users::where('question_id', $question_id)
+        ->paginate(100);
+        return view('admins/question/state', [
+            'aus' => $aus
+        ]);
+    }
+
     public function finish(Request $request)
     {
         $this->validate($request, [
