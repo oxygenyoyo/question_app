@@ -10,19 +10,62 @@ use App\Guest;
 use App\Answer_users;
 use Session;
 use Image;
+use Excel;
+
+use Illuminate\Support\Facades\DB;
 
 class QuestionController extends Controller
 {
     function __construct() 
     {
         $this->middleware('auth', ['except' => 
-            ['test', 'answer', 'show', 'finish_page', 'finish', 'result']
+            ['test', 'answer', 'show', 'finish_page', 'finish', 'result', 'downloadExcel']
         ]);
+    }
+
+    public function downloadExcel($question_id) 
+    {
+        $q = Question::find($question_id);
+        // echo '<pre>';
+        // print_r($q->title_th);
+        // die();   
+
+        $aus = Answer_users::where('question_id', $question_id)
+        ->select(['user_id', DB::raw("COUNT('is_correct') as score")])
+        ->with('guest')
+        ->groupBy('user_id')
+        ->get();
+        $result = [['Name', 'Email', 'Score']];
+        foreach($aus as $au):
+            $temps = [$au->guest->name, $au->guest->email, $au->score];
+            array_push($result, $temps);
+        endforeach;
+        // echo '<pre>';
+        // print_r($result);
+        // die();
+
+
+        Excel::create($q->title_th, function($excel) use($result)  {
+        
+            // Call writer methods here
+            $excel->sheet('Sheetname', function($sheet) use($result) {
+                
+                
+                $sheet->fromArray($result, null, 'A1', false, false);
+    
+            });
+        
+        })
+        ->store('xls', storage_path(public_path() . 'excel'))  
+        ->export('xls');
     }
 
     public function state_list($question_id) 
     {
+        
         $aus = Answer_users::where('question_id', $question_id)
+        ->select(['user_id', DB::raw("COUNT('is_correct') as score")])
+        ->groupBy('user_id')
         ->paginate(100);
         return view('admins/question/state', [
             'aus' => $aus

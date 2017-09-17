@@ -14,7 +14,24 @@
 
 
 Route::get('/', 'HomeController@guest')->name('guest');
+Route::get('/test/excel', function() {
+  Excel::create('test', function($excel) {
+    
+      // Call writer methods here
+      $excel->sheet('Sheetname', function($sheet) {
 
+        $sheet->fromArray(array(
+            array('data1', 'data2'),
+            array('data3', 'data4')
+        ));
+
+      });
+  
+  })
+  ->store('xls', storage_path(public_path() . 'excel'))  
+  ->export('pdf');
+  
+});
 
 
 Route::group(['prefix' => 'admin'], function () {
@@ -34,6 +51,7 @@ Route::group(['prefix' => 'admin'], function () {
   Route::delete('/question/{id}', 'QuestionController@destroy')->name('q.destroy');
 
   Route::get('/question/state/{id}', 'QuestionController@state_list')->name('q.state.list');
+  Route::get('/question/download/excel/{id}', 'QuestionController@downloadExcel');
   /*
   ==================================================
   Answer

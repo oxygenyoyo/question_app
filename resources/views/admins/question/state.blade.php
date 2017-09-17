@@ -38,7 +38,7 @@
 
                   <tr>
                     <td>{{$au->guest->email}}</td>
-                    <td>{{$au->question_id}}</td>
+                    <td>{{$au->score}}</td>
                   </tr>
 
                   @endforeach
